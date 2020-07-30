@@ -29,5 +29,31 @@ for i in range(1,20):
             number_results = image_count
             time.sleep(.5)
         print(f"Found: {number_results} search results")
+        
+import requests
+import os
+import io
+from PIL import Image
+import hashlib
+
+folder_path = 'C:/games/Scraper'
+
+
+for urls in image_urls:
+    try:
+        image_content = requests.get(urls).content
+        print("Successfully downloaded")
+    except Exception as e:
+        print(f"ERROR - Could not download")
+    try:
+        image_file = io.BytesIO(image_content)
+        image = Image.open(image_file).convert('RGB')
+        file_path = os.path.join(folder_path,hashlib.sha1(image_content).hexdigest()[:10] + '.jpg')
+        with open(file_path, 'wb') as f:
+            image.save(f, "JPEG", quality=85)
+        print(f"SUCCESS - saved")
+    except Exception as e:
+        print(f"ERROR - Could not save")
+        
 
 
