@@ -2,11 +2,17 @@ from bs4 import BeautifulSoup
 import selenium
 from selenium import webdriver
 import time
+import requests
+import os
+import io
+from PIL import Image
+import hashlib
+import base64
 
 driver_path = 'C:/games/chromedriver'
 web_driv = webdriver.Chrome(executable_path = driver_path)
 
-search_url = "https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q=cats&oq=cats&gs_l=img"
+search_url = "https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q=cats&oq=cats&gs_l=img"    ##Replace cats with anything you want to collect images for
 web_driv.get(search_url)
 
 image_urls = set()
@@ -30,11 +36,6 @@ for i in range(1,20):
             time.sleep(.5)
         print(f"Found: {number_results} search results")
         
-import requests
-import os
-import io
-from PIL import Image
-import hashlib
 
 folder_path = 'C:/games/Scraper'
 
@@ -44,16 +45,31 @@ for urls in image_urls:
         image_content = requests.get(urls).content
         print("Successfully downloaded")
     except Exception as e:
-        print(f"ERROR - Could not download")
+        try:
+            urls = urls.split(',')[1]
+            base64_bytes = urls.encode('ascii')
+            imgdata = base64.b64decode(urls)
+            filename = f'C:/games/Scraper/{hashlib.sha1(base64_bytes).hexdigest()[:10]}.jpg'
+            with open(filename, 'wb') as f:
+                 f.write(imgdata)
+            print("Successfully downloaded and Saved")
+            
+        except Exception as e:
+            print("Cannot Download")           
+       
     try:
         image_file = io.BytesIO(image_content)
         image = Image.open(image_file).convert('RGB')
         file_path = os.path.join(folder_path,hashlib.sha1(image_content).hexdigest()[:10] + '.jpg')
         with open(file_path, 'wb') as f:
             image.save(f, "JPEG", quality=85)
-        print(f"SUCCESS - saved")
+        print("Succesfully Saved")
     except Exception as e:
-        print(f"ERROR - Could not save")
+        print("ERROR - Could not save")
+        
+     web_driv.quit()
+        
+    
         
 
 
