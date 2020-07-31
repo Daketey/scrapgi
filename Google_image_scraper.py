@@ -9,7 +9,7 @@ from PIL import Image
 import hashlib
 import base64
 
-driver_path = 'C:/games/chromedriver'
+driver_path = 'C:/project/chromedriver'
 web_driv = webdriver.Chrome(executable_path = driver_path)
 
 search_url = "https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q=cats&oq=cats&gs_l=img"    ##Replace cats with anything you want to collect images for
