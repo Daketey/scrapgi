@@ -37,7 +37,7 @@ for i in range(1,20):
         print(f"Found: {number_results} search results")
         
 
-folder_path = 'C:/games/Scraper'
+folder_path = 'C:/project/Scraper'
 
 
 for urls in image_urls:
