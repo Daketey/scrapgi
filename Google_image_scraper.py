@@ -43,7 +43,18 @@ folder_path = 'C:/games/Scraper'
 for urls in image_urls:
     try:
         image_content = requests.get(urls).content
-        print("Successfully downloaded")
+        print("Successfully downloaded")   
+        try:
+            image_file = io.BytesIO(image_content)
+            image = Image.open(image_file).convert('RGB')
+            file_path=os.path.join(folder_path,hashlib.sha1(image_content).hexdigest()[:10]+'.jpg')
+            with open(file_path , 'wb') as f:
+                f.write(imgdata)
+                print('Successfully Saved')
+        except Exception as e:
+            print("Couldnt be saved")
+        
+        
     except Exception as e:
         try:
             urls = urls.split(',')[1]
@@ -57,15 +68,7 @@ for urls in image_urls:
         except Exception as e:
             print("Cannot Download")           
        
-    try:
-        image_file = io.BytesIO(image_content)
-        image = Image.open(image_file).convert('RGB')
-        file_path = os.path.join(folder_path,hashlib.sha1(image_content).hexdigest()[:10] + '.jpg')
-        with open(file_path, 'wb') as f:
-            image.save(f, "JPEG", quality=85)
-        print("Succesfully Saved")
-    except Exception as e:
-        print("ERROR - Could not save")
+   
         
      web_driv.quit()
         
