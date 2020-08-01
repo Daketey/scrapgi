@@ -29,7 +29,7 @@ def CallFromBrowser(Search_word , Driver_path ):
         time.sleep(5)
         thumb = web_driv.find_elements_by_css_selector("img")
         for img in thumb:
-            print(img)
+            print(img) 
             print(img.get_attribute('src'))
             image_urls.add(img.get_attribute('src'))
             image_count = len(image_urls)
