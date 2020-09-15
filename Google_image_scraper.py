@@ -1,7 +1,11 @@
+from bs4 import BeautifulSoup
 import selenium
 from selenium import webdriver
 import time
 import base64
+import cv2
+import matplotlib.pyplot as plt
+import glob
 import requests
 import os
 import io
@@ -70,7 +74,17 @@ def Save_Image(folder_path , image_urls):
                 print("Successfully downloaded and Saved")  
             
             except:
-                print("Cannot Download")   
+                print("Cannot Download")  
+                
+                
+Dir = "C:/games/Scraper/*.jpg"
+
+for img in glob.glob(Dir):
+    img_array = cv2.imread(img , cv2.IMREAD_GRAYSCALE)
+    plt.imshow(img_array , cmap = 'gray')  
+    
+new_img_array = cv2.resize(img_array,(100,100))
+plt.imshow(new_img_array , cmap = 'gray')  
                     
             
 
