@@ -78,13 +78,21 @@ def Save_Image(folder_path , image_urls):
                 
                 
 Dir = "C:/games/Scraper/*.jpg"
+tranning_data=[]
+
 
 for img in glob.glob(Dir):
-    img_array = cv2.imread(img , cv2.IMREAD_GRAYSCALE)
-    plt.imshow(img_array , cmap = 'gray')  
-    
-new_img_array = cv2.resize(img_array,(100,100))
-plt.imshow(new_img_array , cmap = 'gray')  
+    try:
+        img_array = cv2.imread(img , cv2.IMREAD_GRAYSCALE)
+        new_img_array = cv2.resize(img_array,(100,100))
+        tranning_data.append([new_img_array,"DOG"])
+    except:
+        pass
+ X=[]
+ Y=[]
+ for features,labels in tranning_data:                    #Dataset Creation
+     X.append(features)
+     Y.append(labels)
                     
             
 
