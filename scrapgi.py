@@ -1,26 +1,33 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[24]:
+
+
 from bs4 import BeautifulSoup
 import selenium
 from selenium import webdriver
 import time
 import base64
-import cv2
-import matplotlib.pyplot as plt
-import glob
 import requests
 import os
 import io
 from PIL import Image
 import hashlib
 
+
+# In[36]:
+
+
 def scroll_to_end(web_driv, scroll_point):
     web_driv.execute_script(f"window.scrollTo(0, {scroll_point});")
     time.sleep(1)
 
-def CallFromBrowser(Search_word , Driver_path ):
+def CallFromBrowser(Search_word , Driver_path, amount_data):
     
     web_driv = webdriver.Chrome(executable_path = Driver_path)
 
-    search_url = f"https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q={Search_word}s&oq={Search_word}&gs_l=img"
+    search_url = f"https://www.google.com/search?safe=off&site=&tbm=isch&source=hp&q={Search_word}&oq={Search_word}&gs_l=img"
 
     web_driv.get(search_url)
 
@@ -33,15 +40,15 @@ def CallFromBrowser(Search_word , Driver_path ):
         time.sleep(5)
         thumb = web_driv.find_elements_by_css_selector("img")
         for img in thumb:
-            print(img) 
-            print(img.get_attribute('src'))
             image_urls.add(img.get_attribute('src'))
             image_count = len(image_urls)
             number_results = image_count
+            if(number_results==amount_data+1):
+                return image_urls   
             time.sleep(.5)
-        print(f"Found: {number_results} search results. Extracting links...")
+            print(f"Found: {number_results} search results.")
+        
 
-    return image_urls
 
 def Save_Image(folder_path , image_urls):
 
@@ -75,24 +82,4 @@ def Save_Image(folder_path , image_urls):
             
             except:
                 print("Cannot Download")  
-                
-                
-Dir = "C:/games/Scraper/*.jpg"
-tranning_data=[]
-
-
-for img in glob.glob(Dir):
-    try:
-        img_array = cv2.imread(img , cv2.IMREAD_GRAYSCALE)
-        new_img_array = cv2.resize(img_array,(100,100))
-        tranning_data.append([new_img_array,"DOG"])
-    except:
-        pass
- X=[]
- Y=[]
- for features,labels in tranning_data:                    #Dataset Creation
-     X.append(features)
-     Y.append(labels)
-                    
-            
 
