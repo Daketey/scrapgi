@@ -10,6 +10,7 @@ from selenium import webdriver
 import time
 import base64
 import requests
+import cv2
 import os
 import io
 from PIL import Image
@@ -19,11 +20,11 @@ import hashlib
 # In[36]:
 
 
-def scroll_to_end(web_driv, scroll_point):
-    web_driv.execute_script(f"window.scrollTo(0, {scroll_point});")
-    time.sleep(1)
-
-def CallFromBrowser(Search_word , Driver_path, amount_data):
+def call_from_browser(Search_word , Driver_path, amount_data):
+    
+    def scroll_to_end(web_driv, scroll_point):
+        web_driv.execute_script(f"window.scrollTo(0, {scroll_point});")
+        time.sleep(1)
     
     web_driv = webdriver.Chrome(executable_path = Driver_path)
 
@@ -49,8 +50,7 @@ def CallFromBrowser(Search_word , Driver_path, amount_data):
             print(f"Found: {number_results} search results.")
         
 
-
-def Save_Image(folder_path , image_urls):
+def save_image(folder_path , image_urls):
 
     for urls in image_urls:
         try:
@@ -77,9 +77,26 @@ def Save_Image(folder_path , image_urls):
                 filename = f'{folder_path}/{hashlib.sha1(base64_bytes).hexdigest()[:10]}.jpg'
 
                 with open(filename, 'wb') as f:
-                 f.write(imgdata)
-                print("Successfully downloaded and Saved")  
-            
+                    f.write(imgdata)
+                    print("Successfully Saved")  
+                        
             except:
-                print("Cannot Download")  
+                print("Couldnt be saved")  
+
+
+# In[53]:
+
+
+def create_traindata(Directory , labels):
+    tranning_data=[]
+    for label in labels:
+        img_path = os.path.join(Directory , label)
+        for img in os.listdir(img_path):
+            try:
+                img_array = cv2.imread(os.path.join(img_path,img) , cv2.IMREAD_GRAYSCALE)
+                new_img_array = cv2.resize(img_array,(100,100))
+                tranning_data.append([new_img_array, label])
+            except:
+                pass  
+    return tranning_data
 
