@@ -45,6 +45,7 @@ def call_from_browser(Search_word , Driver_path, amount_data):
             image_count = len(image_urls)
             number_results = image_count
             if(number_results==amount_data+1):
+                web_driv.quit()
                 return image_urls   
             time.sleep(.5)
             print(f"Found: {number_results} search results.")
