@@ -15,6 +15,7 @@ import os
 import io
 from PIL import Image
 import hashlib
+import numpy as np
 
 
 # In[36]:
@@ -92,12 +93,14 @@ def create_traindata(Directory , labels):
     tranning_data=[]
     for label in labels:
         img_path = os.path.join(Directory , label)
+        label_index = labels.index(label)
         for img in os.listdir(img_path):
             try:
                 img_array = cv2.imread(os.path.join(img_path,img) , cv2.IMREAD_GRAYSCALE)
                 new_img_array = cv2.resize(img_array,(100,100))
-                tranning_data.append([new_img_array, label])
+                tranning_data.append([new_img_array, label_index])
             except:
-                pass  
+                pass 
+    
     return tranning_data
 
